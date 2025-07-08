@@ -10,7 +10,7 @@ const CommentManager = ({ snippetId }) => {
   const handleGetComments = async () => {
     try {
       const { data } = await axios.get(
-        import.meta.env.VITE_COMMENT_SERVICE + `/${snippetId}/get`
+        import.meta.env.VITE_GATEWAY_SERVICE + `comment/${snippetId}/get`
       );
       console.log(data);
       if (data.success) {

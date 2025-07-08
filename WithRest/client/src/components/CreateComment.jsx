@@ -9,7 +9,7 @@ const CreateComment = ({ id, refetchComments }) => {
 
     try {
       const { data } = await axios.post(
-        import.meta.env.VITE_COMMENT_SERVICE + `/${id}/create`,
+        import.meta.env.VITE_GATEWAY_SERVICE + `comment/${id}/create`,
         {
           comment,
         }

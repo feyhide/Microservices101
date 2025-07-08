@@ -9,7 +9,7 @@ const App = () => {
   const handleGetSnippets = async () => {
     try {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_SNIPPET_SERVICE}/get`
+        import.meta.env.VITE_GATEWAY_SERVICE + "snippet/get"
       );
       console.log(data);
       if (data.success) {

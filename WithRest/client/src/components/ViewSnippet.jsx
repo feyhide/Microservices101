@@ -1,5 +1,4 @@
 import React from "react";
-
 import CreateComment from "./CreateComment";
 import CommentManager from "./CommentManager";
 

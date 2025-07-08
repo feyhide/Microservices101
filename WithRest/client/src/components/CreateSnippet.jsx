@@ -10,7 +10,7 @@ const CreateSnippet = ({ refetchSnippets }) => {
 
     try {
       const { data } = await axios.post(
-        import.meta.env.VITE_SNIPPET_SERVICE + "/create",
+        import.meta.env.VITE_GATEWAY_SERVICE + "snippet/create",
         {
           title,
           code,
