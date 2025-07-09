@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import connectDB from './db.js';
-import userRoute from './route/user.js';
+import taskRoute from './route/task.js';
 
 const app = express();
-const PORT = 3001;
+const PORT = 3002;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -14,10 +14,10 @@ app.use(
   })
 );
 
-app.use('/api/v1/user', userRoute);
+app.use('/api/v1/task', taskRoute);
 
 connectDB();
 
 app.listen(PORT, () => {
-  console.log(`User Service is running on port ${PORT}`);
+  console.log(`Task Service is running on port ${PORT}`);
 });

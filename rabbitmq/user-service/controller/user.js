@@ -5,7 +5,7 @@ export const createUser = async (req, res) => {
     const { name, email } = req.body;
 
     if (!name || !email) {
-      return req.status(400).json({
+      return res.status(400).json({
         message: 'Incomplete Data: Name and email is required',
         data: null,
         success: false,
@@ -15,13 +15,13 @@ export const createUser = async (req, res) => {
     const newUser = new User({ name, email });
     await newUser.save();
 
-    return req.status(201).json({
+    return res.status(201).json({
       message: 'Successfully created user',
       data: newUser,
       success: true,
     });
   } catch (error) {
-    return req.status(500).json({
+    return res.status(500).json({
       message: 'Error Creating User',
       data: error.message,
       success: false,
