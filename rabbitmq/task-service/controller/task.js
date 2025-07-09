@@ -1,4 +1,5 @@
 import Task from '../models/task.js';
+import { channel } from '../rabbitmq/connection.js';
 
 export const createTask = async (req, res) => {
   try {
@@ -14,6 +15,18 @@ export const createTask = async (req, res) => {
 
     const newTask = new Task({ title, description, userId });
     await newTask.save();
+
+    const message = { taskId: newTask._id, userId, title };
+
+    if (!channel) {
+      return res.status(503).json({
+        message: 'RabbitMQ is not connected to task-service',
+        data: null,
+        success: false,
+      });
+    }
+
+    channel.sendToQueue('task-created', Buffer.from(JSON.stringify(message)));
 
     return res.status(201).json({
       message: 'Successfully created task',
