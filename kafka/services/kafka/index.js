@@ -9,13 +9,22 @@ const admin = kafka.admin();
 
 const run = async () => {
   await admin.connect();
-  await admin.createTopics({
+  console.log('Kafka Service connected successfully');
+
+  const created = await admin.createTopics({
     topics: [
       { topic: 'payment-successful' },
       { topic: 'email-successful' },
       { topic: 'order-successful' },
     ],
+    waitForLeaders: true,
   });
+
+  if (created) {
+    console.log('Kafka Service: Topics created successfully');
+  } else {
+    console.log('Kafka Service: Topics already exist');
+  }
 };
 
-run();
+run().catch(console.error);
