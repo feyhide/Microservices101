@@ -1,3 +1,5 @@
+import { producer } from '../kafka/producer.js';
+
 export const getPayment = async (req, res) => {
   try {
     const { cart } = req.body;
@@ -8,6 +10,10 @@ export const getPayment = async (req, res) => {
     // TODO: payment
 
     // KAFKA
+    await producer.send({
+      topic: 'payment-successful',
+      messages: [{ value: JSON.stringify({ userId, cart }) }],
+    });
 
     res.status(200).json('Payment Successful');
   } catch (error) {

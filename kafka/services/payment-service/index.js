@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import paymentRoutes from './routes/payment.js';
+import { connectToKafka } from './kafka/producer.js';
 
 const app = express();
 const PORT = 8000;
@@ -16,5 +17,6 @@ app.use(
 app.use('/', paymentRoutes);
 
 app.listen(PORT, () => {
+  connectToKafka();
   console.log(`Payment Service is running on port ${PORT}`);
 });
