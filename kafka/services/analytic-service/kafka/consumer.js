@@ -7,7 +7,7 @@ const kafka = new Kafka({
 
 export const consumer = kafka.consumer({ groupId: 'analytic-service' });
 
-export const connectToKafka = async () => {
+export const connectConsumerToKafka = async () => {
   try {
     await consumer.connect();
     console.log('Analytic Service: Connected to Kafka as consumer');
@@ -19,25 +19,55 @@ export const connectToKafka = async () => {
 export const startConsuming = async () => {
   try {
     await consumer.subscribe({
-      topic: 'payment-successful',
+      topics: ['payment-successful', 'email-successful', 'order-successful'],
       fromBeginning: true,
     });
 
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
-        const value = message.value.toString();
-        const { userId, cart } = JSON.parse(value);
+        switch (topic) {
+          case 'payment-successful':
+            {
+              const value = message.value.toString();
+              const { userId, cart } = JSON.parse(value);
 
-        const totalNum = cart
-          .reduce((acc, item) => acc + item.price, 0)
-          .toFixed(2);
+              const totalNum = cart
+                .reduce((acc, item) => acc + item.price, 0)
+                .toFixed(2);
 
-        console.log(`Analytic Service Consumer: ${userId} paid ${totalNum}`);
+              console.log(
+                `Analytic Service Consumer: ${userId} paid ${totalNum}`
+              );
+            }
+            break;
+          case 'order-successful':
+            {
+              const value = message.value.toString();
+              const { userId, orderId } = JSON.parse(value);
+
+              console.log(
+                `Analytic Service Consumer: Order Created For ${userId} with orderId: ${orderId}`
+              );
+            }
+            break;
+          case 'email-successful':
+            {
+              const value = message.value.toString();
+              const { userId, email, orderId } = JSON.parse(value);
+
+              console.log(
+                `Analytic Service Consumer: Email sended to ${email} regarding their userId: ${userId}, orderId: ${orderId}`
+              );
+            }
+            break;
+          default:
+            break;
+        }
       },
     });
 
     console.log('Analytic Service is now consuming messages');
   } catch (error) {
-    console.error('Error in consumer:', error.message);
+    console.error('Analytic Service: Error in consumer:', error.message);
   }
 };

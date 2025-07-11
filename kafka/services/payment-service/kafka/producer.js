@@ -7,7 +7,7 @@ const kafka = new Kafka({
 
 export const producer = kafka.producer();
 
-export const connectToKafka = async () => {
+export const connectProducerToKafka = async () => {
   try {
     await producer.connect();
     console.log('Payment Service connected to kafka as producer');
