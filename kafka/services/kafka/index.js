@@ -2,7 +2,7 @@ import { Kafka } from 'kafkajs';
 
 const kafka = new Kafka({
   clientId: 'kafka-service',
-  brokers: ['localhost:9094'],
+  brokers: ['localhost:9094', 'localhost:9095', 'localhost:9096'],
 });
 
 const admin = kafka.admin();
@@ -13,9 +13,21 @@ const run = async () => {
 
   const created = await admin.createTopics({
     topics: [
-      { topic: 'payment-successful' },
-      { topic: 'email-successful' },
-      { topic: 'order-successful' },
+      {
+        topic: 'payment-successful',
+        numPartitions: 3,
+        replicationFactor: 3,
+      },
+      {
+        topic: 'email-successful',
+        numPartitions: 3,
+        replicationFactor: 3,
+      },
+      {
+        topic: 'order-successful',
+        numPartitions: 3,
+        replicationFactor: 3,
+      },
     ],
     waitForLeaders: true,
   });
@@ -25,6 +37,8 @@ const run = async () => {
   } else {
     console.log('Kafka Service: Topics already exist');
   }
+
+  await admin.disconnect();
 };
 
 run().catch(console.error);
